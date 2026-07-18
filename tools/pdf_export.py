@@ -72,3 +72,4 @@ def create_pdf(topic: str, style: str, report_text: str) -> bytes:
         _write_paragraph(pdf, para)
 
     return bytes(pdf.output())
+

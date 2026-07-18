@@ -20,11 +20,15 @@ Topic: {topic}
 Respond ONLY with JSON in this exact format, no other text:
 {{"style": "factual", "reason": "one short sentence explaining why"}}"""
 
-    response = groq_client.chat.completions.create(
-        model="llama-3.3-70b-versatile",
-        max_tokens=150,
-        messages=[{"role": "user", "content": prompt}]
-    )
-
-    raw_text = response.choices[0].message.content.strip()
-    return json.loads(raw_text)
+    try:
+        response = groq_client.chat.completions.create(
+            model="llama-3.3-70b-versatile",
+            max_tokens=150,
+            messages=[{"role": "user", "content": prompt}]
+        )
+        raw_text = response.choices[0].message.content.strip()
+        return json.loads(raw_text)
+    except Exception:
+        return {"style": "factual", "reason": "Defaulted due to an API error."}
+    
+    

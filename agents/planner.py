@@ -17,11 +17,15 @@ Respond ONLY with a JSON array of strings, like:
 ["question 1", "question 2", "question 3", "question 4"]
 No other text."""
 
-    response = groq_client.chat.completions.create(
-        model="llama-3.3-70b-versatile",
-        max_tokens=300,
-        messages=[{"role": "user", "content": prompt}]
-    )
-
-    raw_text = response.choices[0].message.content.strip()
-    return json.loads(raw_text)
+    try:
+        response = groq_client.chat.completions.create(
+            model="llama-3.3-70b-versatile",
+            max_tokens=300,
+            messages=[{"role": "user", "content": prompt}]
+        )
+        raw_text = response.choices[0].message.content.strip()
+        return json.loads(raw_text)
+    except Exception:
+        return [f"What is important to know about {topic}?"]
+    
+    

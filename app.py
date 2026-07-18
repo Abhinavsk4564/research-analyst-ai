@@ -1,6 +1,7 @@
 import streamlit as st
 from tools.pdf_export import create_pdf
 from agents.router import route_topic
+from tools.document_store import add_pdf, clear_documents, has_documents
 from agents.planner import create_research_plan
 from agents.researcher import research_question
 from agents.synthesizer import synthesize_report
@@ -9,6 +10,24 @@ st.set_page_config(page_title="Research Analyst AI", page_icon="🔎", layout="w
 
 st.title("🔎 Research Analyst AI")
 st.caption("A multi-agent system: Router → Planner → Researcher → Synthesizer")
+
+# --- Document Upload (optional RAG source) ---
+with st.expander("📎 Upload documents (optional — adds to research alongside web search)"):
+    uploaded_files = st.file_uploader("Upload PDFs", type=["pdf"], accept_multiple_files=True)
+
+    if uploaded_files:
+        for uploaded_file in uploaded_files:
+            temp_path = f"output/{uploaded_file.name}"
+            with open(temp_path, "wb") as f:
+                f.write(uploaded_file.getbuffer())
+            num_chunks = add_pdf(temp_path, uploaded_file.name)
+            st.success(f"Added '{uploaded_file.name}' ({num_chunks} chunks indexed)")
+
+    if has_documents():
+        st.info("📄 Documents are loaded and will be used in research.")
+        if st.button("Clear uploaded documents"):
+            clear_documents()
+            st.rerun()
 
 # --- Sidebar: live agent status ---
 st.sidebar.header("🤖 Agent Pipeline")
@@ -147,4 +166,5 @@ if st.session_state.result:
                     st.markdown(f"- [{s['title']}]({s['url']})")
 
         st.session_state.chat_history.append({"role": "assistant", "content": answer["summary"]})
+        
         

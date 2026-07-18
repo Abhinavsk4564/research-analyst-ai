@@ -36,10 +36,14 @@ Structure the report as:
 
 Write in clear, professional language."""
 
-    response = groq_client.chat.completions.create(
-        model="llama-3.3-70b-versatile",
-        max_tokens=1500,
-        messages=[{"role": "user", "content": prompt}]
-    )
+    try:
+        response = groq_client.chat.completions.create(
+            model="llama-3.3-70b-versatile",
+            max_tokens=1500,
+            messages=[{"role": "user", "content": prompt}]
+        )
+        return response.choices[0].message.content
+    except Exception as e:
+        return f"⚠️ Could not generate the final report due to an API error: {str(e)[:200]}"
+    
 
-    return response.choices[0].message.content

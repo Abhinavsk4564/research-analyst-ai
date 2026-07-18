@@ -7,7 +7,10 @@ tavily_client = TavilyClient(api_key=os.getenv("TAVILY_API_KEY"))
 
 def search_web(query: str, max_results: int = 5) -> dict:
     """Searches the web. Returns both combined text and structured source list."""
-    results = tavily_client.search(query, max_results=max_results)
+    try:
+        results = tavily_client.search(query, max_results=max_results)
+    except Exception as e:
+        return {"text": f"Web search failed: {str(e)[:150]}", "sources": []}
 
     sources_text = ""
     sources_list = []

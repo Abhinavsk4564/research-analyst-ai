@@ -36,3 +36,4 @@ if __name__ == "__main__":
     print("\n\n=== FINAL REPORT ===\n")
     print(report)
     print("\nReport saved to output/report.md")
+
