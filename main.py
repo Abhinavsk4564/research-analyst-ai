@@ -19,7 +19,7 @@ def run_research(topic: str) -> str:
     for i, question in enumerate(sub_questions, 1):
         print(f"\nResearching ({i}/{len(sub_questions)}): {question}")
         summary = research_question(question)
-        findings.append({"question": question, "summary": summary})
+        findings.append(summary)  # research_question now returns the full dict
         print("Done.")
 
     print("\nSynthesizing final report...")
@@ -36,4 +36,3 @@ if __name__ == "__main__":
     print("\n\n=== FINAL REPORT ===\n")
     print(report)
     print("\nReport saved to output/report.md")
-    
